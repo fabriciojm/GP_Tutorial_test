@@ -2,8 +2,9 @@ import george
 import numpy as np
 
 #mean function. You can write your own mean function and change the input parameters accordingly
-from george.modeling import ModelingMixin
-class Mean(ModelingMixin):
+#from george.modeling import ModelingMixin
+from george.modeling import Model
+class Mean(Model):
     def __init__(self, params):
         self.p0=params[0]
         self.p1=params[1]
