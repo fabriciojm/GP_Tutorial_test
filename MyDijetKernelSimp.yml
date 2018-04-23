@@ -1,0 +1,86 @@
+name: MyDijetKernelSimp
+doc: You should always document your code.
+stationary: false
+params: [a,b,c,d]
+
+reparams:
+    bb: return b; 
+
+value: |
+    double lx1 = b*x1+c;
+    double lx2 = b*x2+c;
+    double coeff = 2*lx1*lx2/(lx1*lx1+lx2*lx2);
+    double xbar = std::abs(x1)+std::abs(x2);
+    double r = std::abs(x1-x2);
+    return exp(-(xbar-d)/(2*a)) * (pow(coeff,0.5)) * exp(-r*r/(lx1*lx1+lx2*lx2));
+grad:
+    a: |
+        double lx1 = b*x1+c;
+        double lx2 = b*x2+c;
+        double coeff = 2*lx1*lx2/(lx1*lx1+lx2*lx2);
+        double xbar = std::abs(x1)+std::abs(x2);
+        double r = std::abs(x1-x2);
+        double A = exp(-(xbar-d)/(2*a));
+        double B = pow(coeff,0.5);
+        double C = exp(-r*r/(lx1*lx1+lx2*lx2));
+        return A * B * C * (xbar-d)/(2*a*a);
+    b: |
+        double lx1 = b*x1+c;
+        double lx2 = b*x2+c;
+        double coeff = 2*lx1*lx2/(lx1*lx1+lx2*lx2);
+        double xbar = std::abs(x1)+std::abs(x2);
+        double r = std::abs(x1-x2);
+        double A = exp(-(xbar-d)/(2*a));
+        double B = pow(coeff,0.5);
+        double C = exp(-r*r/(lx1*lx1+lx2*lx2));
+        return A * B * C * ( ( (x1*lx2 +x2*lx1) / (2*lx1*lx2) ) -  ((x1*lx1+x2*lx2)/(lx1*lx1+lx2*lx2)) + 2*r*r*(x1*lx1+x2*lx2)/pow(lx1*lx1+lx2*lx2,2) );
+    c: |
+        double lx1 = b*x1+c;
+        double lx2 = b*x2+c;
+        double coeff = 2*lx1*lx2/(lx1*lx1+lx2*lx2);
+        double xbar = std::abs(x1)+std::abs(x2);
+        double r = std::abs(x1-x2);
+        double A = exp(-(xbar-d)/(2*a));
+        double B = pow(coeff,0.5);
+        double C = exp(-r*r/(lx1*lx1+lx2*lx2));
+        return 2*A*B*C*r*r*(lx1+lx2)/pow(lx1*lx1+lx2*lx2,2);
+    d: |
+        double lx1 = b*x1+c;
+        double lx2 = b*x2+c;
+        double coeff = 2*lx1*lx2/(lx1*lx1+lx2*lx2);
+        double xbar = std::abs(x1)+std::abs(x2);
+        double r = std::abs(x1-x2);
+        double A = exp(-(xbar-d)/(2*a));
+        double B = pow(coeff,0.5);
+        double C = exp(-r*r/(lx1*lx1+lx2*lx2));
+        return A*B*C/(2*a);
+    x1: |
+        double lx1 = b*x1+c;
+        double lx2 = b*x2+c;
+        double coeff = 2*lx1*lx2/(lx1*lx1+lx2*lx2);
+        double xbar = std::abs(x1)+std::abs(x2);
+        double r = std::abs(x1-x2);
+        double A = exp(-(xbar-d)/(2*a));
+        double B = pow(coeff,0.5);
+        double C = exp(-r*r/(lx1*lx1+lx2*lx2));
+        double sum = lx1*lx1 + lx2*lx2;
+        double sumsq = pow(lx1*lx1 + lx2*lx2,2);
+        double ker = A*B*C;
+        double abs1 = std::abs(x1)/x1;
+
+        return ker * (-abs1/(2*a) + (1/(B*B))*b*(lx2*sum-lx1)/sumsq - 2*r*(abs1*sum - r*b*lx1)/sumsq);
+    x2: |
+        double lx1 = b*x1+c;
+        double lx2 = b*x2+c;
+        double coeff = 2*lx1*lx2/(lx1*lx1+lx2*lx2);
+        double xbar = std::abs(x1)+std::abs(x2);
+        double r = std::abs(x1-x2);
+        double A = exp(-(xbar-d)/(2*a));
+        double B = pow(coeff,0.5);
+        double C = exp(-r*r/(lx1*lx1+lx2*lx2));
+        double sum = lx1*lx1 + lx2*lx2;
+        double sumsq = pow(lx1*lx1 + lx2*lx2,2);
+        double ker = A*B*C;
+        double abs2 = std::abs(x2)/x2;
+
+        return ker * (-abs2/(2*a) + (1/(B*B))*b*(lx1*sum-lx2)/sumsq - 2*r*(abs2*sum - r*b*lx2)/sumsq);
